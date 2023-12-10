@@ -104,9 +104,10 @@ export default function Page({
       toDataURL(url, { width: 200 }).then((imgUrl) => {
         setImgUrl(imgUrl);
       });
-
-      updateLocationUrlQuery(url);
+    } else {
+      setImgUrl("")
     }
+    updateLocationUrlQuery(url);
   }, [url]);
 
   return (
