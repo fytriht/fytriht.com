@@ -188,7 +188,7 @@ function UrlEditor({
       </label>
 
       <label style={{ display: "flex" }}>
-        Pathname: /
+        Pathname: {pathname && '/'}
         <input
           type="text"
           style={{ flex: 1 }}
@@ -222,7 +222,7 @@ function UrlEditor({
       </label>
 
       <label style={{ display: "flex" }}>
-        Hash: #
+        Hash: {hash && '#'}
         <input
           type="text"
           style={{ flex: 1 }}
