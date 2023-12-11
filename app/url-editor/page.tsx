@@ -30,7 +30,7 @@ function fromUrlString(u: string): CustomURL {
   }
   [url, query] = url.split("?");
   // TODO: match port
-  const matched = url.match(/^(\S+?):\/\/(\S+?)(:\d+?)?(\/\S+?)?$/);
+  const matched = url.match(/^(\w+?):\/\/(\S+?)(:\d+?)?(\/\S+?)?$/);
   if (matched !== null) {
     [, scheme, hostname, port, pathname] = matched;
     if (port !== undefined) {
@@ -92,7 +92,7 @@ export default function Page({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const [url, setUrl] = useState(() =>
-    decodeURIComponent((searchParams.url as string) ?? "")
+    (searchParams.url as string) ?? ""
   );
   const [imgUrl, setImgUrl] = useState("");
   console.log({ searchParams });
@@ -207,7 +207,7 @@ function UrlEditor({
 
       <label style={{ display: "flex", flexDirection: "column" }}>
         Query:{" "}
-        <div style={{ flex: 1, marginLeft: 30 }}>
+        <div style={{ flex: 1, marginLeft: 60 }}>
           {query && (
             <QueryEditor
               query={query ?? ""}
@@ -252,9 +252,9 @@ function QueryEditor({
   const searchParams = useMemo(() => new URLSearchParams(query), [query]);
   return (
     <>
-      {[...searchParams.entries()].map(([key, value]) => {
+      {[...searchParams.entries()].map(([key, value], idx) => {
         return (
-          <label key={key} style={{ display: "flex" }}>
+          <label key={key + idx} style={{ display: "flex" }}>
             {key}:{" "}
             {canParsed(value) ? (
               <div
@@ -266,7 +266,6 @@ function QueryEditor({
               >
                 <input type="text" style={{ flex: 1 }} value={value} disabled />
                 <UrlEditor
-                  key={key}
                   url={value}
                   onChange={(v) => {
                     const searchObj = new URLSearchParams(searchParams);
