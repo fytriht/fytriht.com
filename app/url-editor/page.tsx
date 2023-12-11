@@ -256,6 +256,7 @@ function QueryEditor({
         return (
           <label key={key + idx} style={{ display: "flex" }}>
             {key}:{" "}
+            {/* TODO: JSON Editor */}
             {canParsed(value) ? (
               <div
                 style={{
@@ -264,6 +265,7 @@ function QueryEditor({
                   flexDirection: "column",
                 }}
               >
+                {/* TODO: make it editable */}
                 <input type="text" style={{ flex: 1 }} value={value} disabled />
                 <UrlEditor
                   url={value}
