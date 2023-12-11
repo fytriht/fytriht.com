@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toDataURL } from "qrcode";
 
 const _testCase =
-  "https://host.name/path/name?q1=a&url=https2%3A%2F%2Fpath%2Fname2%3Fq2%3Db%23hash2#hash";
+  "https://host.name/path/name?q1=a&url=https2%3A%2F%2Fpath%2Fname2%3Fq2%3Db%23hash2#hash1";
 
 interface CustomURL {
   scheme?: string;
