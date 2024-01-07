@@ -73,6 +73,16 @@ export function QueryEditor({
                 />
               );
             })()}
+            <button
+              onClick={() => {
+                const searchObj = new URLSearchParams(searchParams);
+                searchObj.delete(key);
+                console.log(searchObj, searchObj.toString());
+                onChange?.(searchObj.toString());
+              }}
+            >
+              Remove
+            </button>
           </div>
         );
       })}

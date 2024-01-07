@@ -99,10 +99,8 @@ export function UrlEditor({
           <QueryEditor
             query={query ?? ""}
             onChange={(value) => {
-              if (value) {
-                const newUrl = toUrlString({ ...customUrl, query: value });
-                onChange?.(newUrl);
-              }
+              const newUrl = toUrlString({ ...customUrl, query: value });
+              onChange?.(newUrl);
             }}
           />
         )}
