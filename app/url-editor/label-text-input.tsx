@@ -2,7 +2,7 @@ import { Input } from "../../components/input";
 import { Label } from "../../components/label";
 
 export type LabelTextInputProps = {
-  label: string;
+  label: string | undefined;
 } & Pick<
   React.InputHTMLAttributes<HTMLInputElement>,
   "value" | "onChange" | "className" | "id" | "placeholder"

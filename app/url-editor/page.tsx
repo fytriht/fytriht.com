@@ -36,9 +36,9 @@ export default function Page({
   }, [url]);
 
   return (
-    <>
-      <img src={imgUrl} width={200} alt="" />
-      <UrlEditor url={url} onChange={(url) => setUrl(url)} />
-    </>
+    <div className="flex">
+      <UrlEditor className="grow" url={url} onChange={(url) => setUrl(url)} />
+      <img className="w-60 h-60" src={imgUrl} alt="" />
+    </div>
   );
 }

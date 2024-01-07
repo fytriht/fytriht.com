@@ -1,29 +1,33 @@
 import { useMemo } from "react";
 import { fromUrlString, toUrlString } from "./url-utils";
 import { QueryEditor } from "./query-editor";
-import { Input } from "../../components/input";
 import { LabelTextInput } from "./label-text-input";
+import { Label } from "../../components/label";
+import { Textarea } from "../../components/textarea";
 
 export function UrlEditor({
   url,
   onChange,
+  className,
 }: {
   url: string;
   onChange?: (url: string) => void;
+  className?: string;
 }) {
   const customUrl = useMemo(() => fromUrlString(url), [url]);
 
   const { scheme, hostname, port, pathname, query, hash } = customUrl;
 
   return (
-    <>
-      <Input
-        type="text"
+    <div className={className}>
+      <Textarea
         value={url}
         onChange={(e) => {
           onChange?.(e.target.value);
         }}
-        style={{ width: "100%" }}
+        style={{ width: "100%", resize: "none" }}
+        rows={3}
+        className="break-all"
       />
 
       <LabelTextInput
@@ -84,9 +88,9 @@ export function UrlEditor({
         }}
       />
 
-      <label style={{ display: "flex", flexDirection: "column" }}>
-        Query:{" "}
-        <div style={{ flex: 1, marginLeft: 60 }}>
+      <div className="flex items-center">
+        <Label className="w-32">Query: </Label>
+        <div className="w-full">
           {query && (
             <QueryEditor
               query={query ?? ""}
@@ -99,7 +103,7 @@ export function UrlEditor({
             />
           )}
         </div>
-      </label>
+      </div>
 
       <LabelTextInput
         label="Hash"
@@ -116,6 +120,6 @@ export function UrlEditor({
           onChange?.(newUrl);
         }}
       />
-    </>
+    </div>
   );
 }
