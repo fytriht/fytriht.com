@@ -91,9 +91,7 @@ export default function Page({
   params: { slug: string };
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const [url, setUrl] = useState(() =>
-    (searchParams.url as string) ?? ""
-  );
+  const [url, setUrl] = useState(() => (searchParams.url as string) ?? "");
   const [imgUrl, setImgUrl] = useState("");
   console.log({ searchParams });
 
@@ -105,7 +103,7 @@ export default function Page({
         setImgUrl(imgUrl);
       });
     } else {
-      setImgUrl("")
+      setImgUrl("");
     }
     updateLocationUrlQuery(url);
   }, [url]);
@@ -189,7 +187,7 @@ function UrlEditor({
       </label>
 
       <label style={{ display: "flex" }}>
-        Pathname: {pathname && '/'}
+        Pathname: {pathname && "/"}
         <input
           type="text"
           style={{ flex: 1 }}
@@ -223,7 +221,7 @@ function UrlEditor({
       </label>
 
       <label style={{ display: "flex" }}>
-        Hash: {hash && '#'}
+        Hash: {hash && "#"}
         <input
           type="text"
           style={{ flex: 1 }}
@@ -255,8 +253,7 @@ function QueryEditor({
       {[...searchParams.entries()].map(([key, value], idx) => {
         return (
           <label key={key + idx} style={{ display: "flex" }}>
-            {key}:{" "}
-            {/* TODO: JSON Editor */}
+            {key}: {/* TODO: JSON Editor */}
             {canParsed(value) ? (
               <div
                 style={{
