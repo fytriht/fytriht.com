@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { fromUrlString, toUrlString } from "./url-utils";
 import { QueryEditor } from "./query-editor";
+import { Input } from "../../components/input";
 
 export function UrlEditor({
   url,
@@ -15,7 +16,7 @@ export function UrlEditor({
 
   return (
     <>
-      <input
+      <Input
         type="text"
         value={url}
         onChange={(e) => {
@@ -26,7 +27,7 @@ export function UrlEditor({
 
       <label style={{ display: "flex" }}>
         Scheme:{" "}
-        <input
+        <Input
           type="text"
           style={{ flex: 1 }}
           value={scheme ?? ""}
@@ -42,7 +43,7 @@ export function UrlEditor({
 
       <label style={{ display: "flex" }}>
         Hostname:{" "}
-        <input
+        <Input
           type="text"
           style={{ flex: 1 }}
           value={hostname ?? ""}
@@ -58,7 +59,7 @@ export function UrlEditor({
 
       <label style={{ display: "flex" }}>
         Port:{" "}
-        <input
+        <Input
           type="text"
           style={{ flex: 1 }}
           value={port ?? ""}
@@ -74,7 +75,7 @@ export function UrlEditor({
 
       <label style={{ display: "flex" }}>
         Pathname: {pathname && "/"}
-        <input
+        <Input
           type="text"
           style={{ flex: 1 }}
           value={pathname?.slice(1) ?? ""}
@@ -108,7 +109,7 @@ export function UrlEditor({
 
       <label style={{ display: "flex" }}>
         Hash: {hash && "#"}
-        <input
+        <Input
           type="text"
           style={{ flex: 1 }}
           value={hash?.slice(1) ?? ""}
