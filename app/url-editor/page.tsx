@@ -3,9 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import { toDataURL } from "qrcode";
 import { UrlEditor } from "./url-editor";
 
-const _testCase =
-  "https://host.name/path/name?q1=a&url=https2%3A%2F%2Fpath%2Fname2%3Fq2%3Db%23hash2#hash1";
-
 function updateLocationUrlQuery(v: string) {
   const queryParams = new URLSearchParams(window.location.search);
   queryParams.set("url", v);
@@ -24,7 +21,6 @@ export default function Page({
 }) {
   const [url, setUrl] = useState(() => (searchParams.url as string) ?? "");
   const [imgUrl, setImgUrl] = useState("");
-  console.log({ searchParams });
 
   // TODO: debounce
   // TODO: cancel
