@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { fromUrlString, toUrlString } from "./url-utils";
 import { QueryEditor } from "./query-editor";
 import { Input } from "../../components/input";
+import { LabelTextInput } from "./label-text-input";
 
 export function UrlEditor({
   url,
@@ -25,70 +26,63 @@ export function UrlEditor({
         style={{ width: "100%" }}
       />
 
-      <label style={{ display: "flex" }}>
-        Scheme:{" "}
-        <Input
-          type="text"
-          style={{ flex: 1 }}
-          value={scheme ?? ""}
-          onChange={(e) => {
-            const { value } = e.target;
-            if (value) {
-              const newUrl = toUrlString({ ...customUrl, scheme: value });
-              onChange?.(newUrl);
-            }
-          }}
-        />
-      </label>
-
-      <label style={{ display: "flex" }}>
-        Hostname:{" "}
-        <Input
-          type="text"
-          style={{ flex: 1 }}
-          value={hostname ?? ""}
-          onChange={(e) => {
-            const { value } = e.target;
-            if (value) {
-              const newUrl = toUrlString({ ...customUrl, hostname: value });
-              onChange?.(newUrl);
-            }
-          }}
-        />
-      </label>
-
-      <label style={{ display: "flex" }}>
-        Port:{" "}
-        <Input
-          type="text"
-          style={{ flex: 1 }}
-          value={port ?? ""}
-          onChange={(e) => {
-            const { value } = e.target;
-            // if (value) {
-            const newUrl = toUrlString({ ...customUrl, port: value });
+      <LabelTextInput
+        label="Scheme"
+        id="scheme"
+        placeholder="Scheme"
+        value={scheme ?? ""}
+        onChange={(e) => {
+          const { value } = e.target;
+          if (value) {
+            const newUrl = toUrlString({ ...customUrl, scheme: value });
             onChange?.(newUrl);
-            // }
-          }}
-        />
-      </label>
+          }
+        }}
+      />
 
-      <label style={{ display: "flex" }}>
-        Pathname: {pathname && "/"}
-        <Input
-          type="text"
-          style={{ flex: 1 }}
-          value={pathname?.slice(1) ?? ""}
-          onChange={(e) => {
-            const { value } = e.target;
-            const newUrl = toUrlString({
-              ...customUrl,
-              pathname: value ? `/${value}` : undefined,
-            });
+      <LabelTextInput
+        label="Hostname"
+        id="hostname"
+        placeholder="Hostname"
+        value={hostname ?? ""}
+        onChange={(e) => {
+          const { value } = e.target;
+          if (value) {
+            const newUrl = toUrlString({ ...customUrl, hostname: value });
             onChange?.(newUrl);
-          }}
-        />
-      </label>
+          }
+        }}
+      />
+
+      <LabelTextInput
+        label="Port"
+        id="port"
+        placeholder="Port"
+        value={port ?? ""}
+        onChange={(e) => {
+          const { value } = e.target;
+          // if (value) {
+          const newUrl = toUrlString({ ...customUrl, port: value });
+          onChange?.(newUrl);
+          // }
+        }}
+      />
+
+      <LabelTextInput
+        label="Pathname"
+        id="pathname"
+        placeholder="Pathname"
+        value={pathname ?? ""}
+        onChange={(e) => {
+          const { value } = e.target;
+          const newUrl = toUrlString({
+            ...customUrl,
+            pathname:
+              value.length === 1 && value.at(0) !== "/" ? "/" + value : value,
+          });
+          onChange?.(newUrl);
+        }}
+      />
 
       <label style={{ display: "flex", flexDirection: "column" }}>
         Query:{" "}
@@ -107,22 +101,21 @@ export function UrlEditor({
         </div>
       </label>
 
-      <label style={{ display: "flex" }}>
-        Hash: {hash && "#"}
-        <Input
-          type="text"
-          style={{ flex: 1 }}
-          value={hash?.slice(1) ?? ""}
-          onChange={(e) => {
-            const { value } = e.target;
-            const newUrl = toUrlString({
-              ...customUrl,
-              hash: value ? `#${value}` : undefined,
-            });
-            onChange?.(newUrl);
-          }}
-        />
-      </label>
+      <LabelTextInput
+        label="Hash"
+        id="hash"
+        placeholder="Hash"
+        value={hash ?? ""}
+        onChange={(e) => {
+          const { value } = e.target;
+          const newUrl = toUrlString({
+            ...customUrl,
+            hash:
+              value.length === 1 && value.at(0) !== "#" ? "#" + value : value,
+          });
+          onChange?.(newUrl);
+        }}
+      />
     </>
   );
 }
