@@ -93,4 +93,40 @@ test("custom protocol", () => {
       "scheme": "aweme",
     }
   `);
+
+  const res2 = fromUrlString("aweme://webview");
+  expect(res2).toMatchInlineSnapshot(`
+    {
+      "hash": undefined,
+      "hostname": "webview",
+      "pathname": undefined,
+      "port": undefined,
+      "query": undefined,
+      "scheme": "aweme",
+    }
+  `);
+
+  const res3 = fromUrlString("aweme://webview/");
+  expect(res3).toMatchInlineSnapshot(`
+    {
+      "hash": undefined,
+      "hostname": "webview",
+      "pathname": "/",
+      "port": undefined,
+      "query": undefined,
+      "scheme": "aweme",
+    }
+  `);
+
+  const res4 = fromUrlString("aweme://webview/sub");
+  expect(res4).toMatchInlineSnapshot(`
+    {
+      "hash": undefined,
+      "hostname": "webview",
+      "pathname": "/sub",
+      "port": undefined,
+      "query": undefined,
+      "scheme": "aweme",
+    }
+  `);
 });

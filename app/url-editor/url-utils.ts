@@ -23,7 +23,9 @@ export function fromUrlString(u: string): CustomURL {
   }
   [url, query] = url.split("?");
   // TODO: match port
-  const matched = url.match(/^(\w+?):\/\/(\S+?)(:\d+?)?(\/\S+?)?$/);
+  // prettier-ignore
+  const reg = new RegExp(String.raw`^(\w+?)://(\S+?)(:\d+?)?(/\S*?)?$`);
+  const matched = url.match(reg);
   if (matched !== null) {
     [, scheme, hostname, port, pathname] = matched;
     if (port !== undefined) {
