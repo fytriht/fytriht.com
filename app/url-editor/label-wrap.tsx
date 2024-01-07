@@ -4,7 +4,7 @@ import { Label } from "../../components/label";
 export type LabelWrapProps = React.PropsWithChildren<{
   label: ReactNode;
   htmlFor?: string;
-  style: CSSProperties;
+  style?: CSSProperties;
 }>;
 
 export function LabelWrap({ children, label, htmlFor, style }: LabelWrapProps) {

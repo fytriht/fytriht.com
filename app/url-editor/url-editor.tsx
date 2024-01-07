@@ -26,9 +26,12 @@ export function UrlEditor({
         onChange={(e) => {
           onChange?.(e.target.value);
         }}
-        style={{ width: "100%", resize: "none" }}
+        style={{
+          resize: "none",
+          boxShadow: "none",
+        }}
         rows={3}
-        className="break-all"
+        className="break-all w-full border-t-0 border-l-0 border-r-0 rounded-none"
       />
 
       <LabelWrap label="Scheme">

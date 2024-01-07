@@ -16,49 +16,64 @@ export function QueryEditor({
   return (
     <div className="w-full space-y-1">
       {[...searchParams.entries()].map(([key, value], idx) => {
-        if (canParsed(value)) {
-          return (
-            <div
-              key={key + idx}
-              className="flex"
-              style={{
-                backgroundColor: "#f1f5fa",
-                borderRadius: "calc(var(--radius) - 2px)",
-              }}
-            >
-              <Label className="w-32">{`${key}: `}</Label>
-              <UrlEditor
-                className="flex flex-col w-full"
-                url={value}
-                onChange={(v) => {
-                  const searchObj = new URLSearchParams(searchParams);
-                  searchObj.set(key, v);
-                  onChange?.(searchObj.toString());
-                }}
-              />
-            </div>
-          );
-        }
-
         return (
-          <LabelWrap
+          <div
             key={key + idx}
-            label={key}
+            className="flex py-2"
             style={{
               backgroundColor: "#f1f5fa",
               borderRadius: "calc(var(--radius) - 2px)",
             }}
           >
-            <Input
-              value={value}
-              onChange={(e) => {
-                const { value } = e.target;
-                const searchObj = new URLSearchParams(searchParams);
-                searchObj.set(key, value);
-                onChange?.(searchObj.toString());
-              }}
-            />
-          </LabelWrap>
+            {(() => {
+              if (canParsed(value)) {
+                return (
+                  <>
+                    <Input
+                      className="w-32 mx-1 text-right border-t-0 border-l-0 border-r-0 rounded-none"
+                      style={{
+                        boxShadow: "none",
+                      }}
+                      value={key}
+                    ></Input>
+                    <UrlEditor
+                      className="flex flex-col w-full"
+                      url={value}
+                      onChange={(v) => {
+                        const searchObj = new URLSearchParams(searchParams);
+                        searchObj.set(key, v);
+                        onChange?.(searchObj.toString());
+                      }}
+                    />
+                  </>
+                );
+              }
+              return (
+                <>
+                  <Input
+                    className="w-32 mx-1 text-right border-t-0 border-l-0 border-r-0 rounded-none"
+                    style={{
+                      boxShadow: "none",
+                    }}
+                    value={key}
+                  ></Input>
+                  <Input
+                    className="border-t-0 border-l-0 border-r-0 rounded-none"
+                    style={{
+                      boxShadow: "none",
+                    }}
+                    value={value}
+                    onChange={(e) => {
+                      const { value } = e.target;
+                      const searchObj = new URLSearchParams(searchParams);
+                      searchObj.set(key, value);
+                      onChange?.(searchObj.toString());
+                    }}
+                  />
+                </>
+              );
+            })()}
+          </div>
         );
       })}
     </div>
