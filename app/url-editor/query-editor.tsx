@@ -18,59 +18,59 @@ export function QueryEditor({
       {[...searchParams.entries()].map(([key, value], idx) => {
         return (
           <div
-            key={key + idx}
+            key={idx}
             className="flex py-2"
             style={{
               backgroundColor: "#f1f5fa",
               borderRadius: "calc(var(--radius) - 2px)",
             }}
           >
+            <Input
+              className="w-32 mx-1 text-right border-t-0 border-l-0 border-r-0 rounded-none"
+              style={{
+                boxShadow: "none",
+              }}
+              value={key}
+              onChange={(e) => {
+                const { value } = e.target;
+                onChange?.(
+                  new URLSearchParams(
+                    [...searchParams].map(([k, v]) => [
+                      k === key ? value : k,
+                      v,
+                    ])
+                  ).toString()
+                );
+              }}
+            ></Input>
             {(() => {
               if (canParsed(value)) {
                 return (
-                  <>
-                    <Input
-                      className="w-32 mx-1 text-right border-t-0 border-l-0 border-r-0 rounded-none"
-                      style={{
-                        boxShadow: "none",
-                      }}
-                      value={key}
-                    ></Input>
-                    <UrlEditor
-                      className="flex flex-col w-full"
-                      url={value}
-                      onChange={(v) => {
-                        const searchObj = new URLSearchParams(searchParams);
-                        searchObj.set(key, v);
-                        onChange?.(searchObj.toString());
-                      }}
-                    />
-                  </>
-                );
-              }
-              return (
-                <>
-                  <Input
-                    className="w-32 mx-1 text-right border-t-0 border-l-0 border-r-0 rounded-none"
-                    style={{
-                      boxShadow: "none",
-                    }}
-                    value={key}
-                  ></Input>
-                  <Input
-                    className="border-t-0 border-l-0 border-r-0 rounded-none"
-                    style={{
-                      boxShadow: "none",
-                    }}
-                    value={value}
-                    onChange={(e) => {
-                      const { value } = e.target;
+                  <UrlEditor
+                    className="flex flex-col w-full"
+                    url={value}
+                    onChange={(v) => {
                       const searchObj = new URLSearchParams(searchParams);
-                      searchObj.set(key, value);
+                      searchObj.set(key, v);
                       onChange?.(searchObj.toString());
                     }}
                   />
-                </>
+                );
+              }
+              return (
+                <Input
+                  className="border-t-0 border-l-0 border-r-0 rounded-none"
+                  style={{
+                    boxShadow: "none",
+                  }}
+                  value={value}
+                  onChange={(e) => {
+                    const { value } = e.target;
+                    const searchObj = new URLSearchParams(searchParams);
+                    searchObj.set(key, value);
+                    onChange?.(searchObj.toString());
+                  }}
+                />
               );
             })()}
           </div>
