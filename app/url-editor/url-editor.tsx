@@ -4,6 +4,7 @@ import { QueryEditor } from "./query-editor";
 import { LabelTextInput } from "./label-text-input";
 import { Label } from "../../components/label";
 import { Textarea } from "../../components/textarea";
+import { cn } from "../../lib/utils";
 
 export function UrlEditor({
   url,
@@ -19,7 +20,7 @@ export function UrlEditor({
   const { scheme, hostname, port, pathname, query, hash } = customUrl;
 
   return (
-    <div className={className}>
+    <div className={cn(className, "space-y-1")}>
       <Textarea
         value={url}
         onChange={(e) => {
@@ -90,7 +91,7 @@ export function UrlEditor({
 
       <div className="flex items-center">
         <Label className="w-32">Query: </Label>
-        <div className="w-full">
+        <div className="w-full space-y-1">
           {query && (
             <QueryEditor
               query={query ?? ""}
