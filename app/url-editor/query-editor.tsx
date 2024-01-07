@@ -24,8 +24,6 @@ export function QueryEditor({
                   flexDirection: "column",
                 }}
               >
-                {/* TODO: make it editable */}
-                <input type="text" style={{ flex: 1 }} value={value} disabled />
                 <UrlEditor
                   url={value}
                   onChange={(v) => {

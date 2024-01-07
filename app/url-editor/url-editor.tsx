@@ -15,6 +15,15 @@ export function UrlEditor({
 
   return (
     <>
+      <input
+        type="text"
+        value={url}
+        onChange={(e) => {
+          onChange?.(e.target.value);
+        }}
+        style={{ width: "100%" }}
+      />
+
       <label style={{ display: "flex" }}>
         Scheme:{" "}
         <input

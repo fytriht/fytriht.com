@@ -37,16 +37,7 @@ export default function Page({
 
   return (
     <>
-      <input
-        type="text"
-        value={url}
-        onChange={(e) => {
-          setUrl(e.target.value);
-        }}
-        style={{ width: "100%" }}
-      />
       <img src={imgUrl} width={200} alt="" />
-
       <UrlEditor url={url} onChange={(url) => setUrl(url)} />
     </>
   );
