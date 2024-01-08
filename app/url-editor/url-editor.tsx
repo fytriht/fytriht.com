@@ -95,15 +95,13 @@ export function UrlEditor({
       </LabelWrap>
 
       <LabelWrap label="Query">
-        {query && (
-          <QueryEditor
-            query={query ?? ""}
-            onChange={(value) => {
-              const newUrl = toUrlString({ ...customUrl, query: value });
-              onChange?.(newUrl);
-            }}
-          />
-        )}
+        <QueryEditor
+          query={query ?? ""}
+          onChange={(value) => {
+            const newUrl = toUrlString({ ...customUrl, query: value });
+            onChange?.(newUrl);
+          }}
+        />
       </LabelWrap>
 
       <LabelWrap label="Hash">

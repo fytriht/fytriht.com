@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { UrlEditor } from "./url-editor";
 import { canParsed } from "./url-utils";
 import { Input } from "../../components/input";
@@ -13,6 +13,23 @@ export function QueryEditor({
   onChange?: (v: string) => void;
 }) {
   const searchParams = useMemo(() => new URLSearchParams(query), [query]);
+  const newQueryIndexRef = useRef(0);
+
+  // Automatically focus on the newly added item
+  let previousQuerySizeRef = useRef<number>(searchParams.size);
+  useEffect(() => {
+    const previousSize = previousQuerySizeRef.current;
+    const currentSize = searchParams.size;
+    if (currentSize > previousSize) {
+      const lastItem = [...searchParams.entries()].at(-1);
+      if (lastItem) {
+        const [key] = lastItem;
+        document.getElementById(key)?.focus();
+      }
+    }
+    previousQuerySizeRef.current = currentSize;
+  }, [searchParams.size]);
+
   return (
     <div className="w-full space-y-1">
       {[...searchParams.entries()].map(([key, value], idx) => {
@@ -30,6 +47,7 @@ export function QueryEditor({
               style={{
                 boxShadow: "none",
               }}
+              id={key}
               value={key}
               onChange={(e) => {
                 const { value } = e.target;
@@ -86,6 +104,26 @@ export function QueryEditor({
           </div>
         );
       })}
+      <button
+        onClick={() => {
+          const searchObj = new URLSearchParams(searchParams);
+          const [K, V] = ["key", "value"];
+          while (true) {
+            const index = newQueryIndexRef.current;
+            let k = index > 0 ? `${K}${index}` : K;
+            let v = index > 0 ? `${V}${index}` : V;
+            if (searchObj.has(k)) {
+              newQueryIndexRef.current++;
+            } else {
+              searchObj.set(k, v);
+              break;
+            }
+          }
+          onChange?.(searchObj.toString());
+        }}
+      >
+        Add
+      </button>
     </div>
   );
 }
