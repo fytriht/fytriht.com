@@ -129,4 +129,16 @@ test("custom protocol", () => {
       "scheme": "aweme",
     }
   `);
+
+  const res5 = fromUrlString("aweme://webview?url=http%3A%2F%2F10.71.192.13%3A5566%2Fhtml%2Ftask_nsr%3F_pia_%3D1%26_pia_mock_%3D%257B%2522features%2522%253A%255B%2522streaming%2522%255D%252C%2522streaming%2522%253A%2522http%253A%252F%252F10.71.192.13%253A5566%252Fresource%252Fjs%252Ftask_nsr.pia.streaming.js%2522%257D%26__status_bar%3Dtrue%26_pia_%3D1%26campaign%3DZA_Referral%26campaign_name%3Dza%26disable_ttnet_proxy%3D0%26enter_from%3Dfloating_badge%26hide_nav_bar%3D1%26lng%3Den%26should_full_screen%3D1%26touch_point_id%3D1%26type%3DNormalPendant-ZA%26use_mutable_context%3D1%26device_id%3D7261896084237420075%26carrier_region%3DZA%26status_bar_height%3D49&use_spark=1&use_forest=0&bdhm_bid=incentive_campaign")
+  expect(res5).toMatchInlineSnapshot(`
+    {
+      "hash": undefined,
+      "hostname": "webview",
+      "pathname": undefined,
+      "port": undefined,
+      "query": "url=http%3A%2F%2F10.71.192.13%3A5566%2Fhtml%2Ftask_nsr%3F_pia_%3D1%26_pia_mock_%3D%257B%2522features%2522%253A%255B%2522streaming%2522%255D%252C%2522streaming%2522%253A%2522http%253A%252F%252F10.71.192.13%253A5566%252Fresource%252Fjs%252Ftask_nsr.pia.streaming.js%2522%257D%26__status_bar%3Dtrue%26_pia_%3D1%26campaign%3DZA_Referral%26campaign_name%3Dza%26disable_ttnet_proxy%3D0%26enter_from%3Dfloating_badge%26hide_nav_bar%3D1%26lng%3Den%26should_full_screen%3D1%26touch_point_id%3D1%26type%3DNormalPendant-ZA%26use_mutable_context%3D1%26device_id%3D7261896084237420075%26carrier_region%3DZA%26status_bar_height%3D49&use_spark=1&use_forest=0&bdhm_bid=incentive_campaign",
+      "scheme": "aweme",
+    }
+  `)
 });

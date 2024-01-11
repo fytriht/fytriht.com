@@ -4,6 +4,7 @@ import { canParsed } from "./url-utils";
 import { Input } from "../../components/input";
 import { LabelWrap } from "./label-wrap";
 import { Label } from "../../components/label";
+import { deleteQueryItem, getLastQueryItem, getQueryEntries, getQuerySize, setQueryItemKey, setQueryItemValue } from "./query";
 
 export function QueryEditor({
   query,
@@ -12,27 +13,28 @@ export function QueryEditor({
   query: string;
   onChange?: (v: string) => void;
 }) {
-  const searchParams = useMemo(() => new URLSearchParams(query), [query]);
+  // const searchParams = useMemo(() => new URLSearchParams(query), [query]);
   const newQueryIndexRef = useRef(0);
 
   // Automatically focus on the newly added item
-  let previousQuerySizeRef = useRef<number>(searchParams.size);
+  let previousQuerySizeRef = useRef<number>(getQuerySize(query));
+  const querySize = getQuerySize(query)
   useEffect(() => {
     const previousSize = previousQuerySizeRef.current;
-    const currentSize = searchParams.size;
+    const currentSize = querySize;
     if (currentSize > previousSize) {
-      const lastItem = [...searchParams.entries()].at(-1);
+      const lastItem = getLastQueryItem(query);
       if (lastItem) {
         const [key] = lastItem;
         document.getElementById(key)?.focus();
       }
     }
     previousQuerySizeRef.current = currentSize;
-  }, [searchParams.size]);
+  }, [querySize]);
 
   return (
     <div className="w-full space-y-1">
-      {[...searchParams.entries()].map(([key, value], idx) => {
+      {getQueryEntries(query).map(([key, value], idx) => {
         return (
           <div
             key={idx}
@@ -51,14 +53,7 @@ export function QueryEditor({
               value={key}
               onChange={(e) => {
                 const { value } = e.target;
-                onChange?.(
-                  new URLSearchParams(
-                    [...searchParams].map(([k, v]) => [
-                      k === key ? value : k,
-                      v,
-                    ])
-                  ).toString()
-                );
+                onChange?.(setQueryItemKey(query, key, value))
               }}
             ></Input>
             {(() => {
@@ -68,9 +63,7 @@ export function QueryEditor({
                     className="flex flex-col w-full"
                     url={value}
                     onChange={(v) => {
-                      const searchObj = new URLSearchParams(searchParams);
-                      searchObj.set(key, v);
-                      onChange?.(searchObj.toString());
+                      onChange?.(setQueryItemValue(query, key, v))
                     }}
                   />
                 );
@@ -83,20 +76,18 @@ export function QueryEditor({
                   }}
                   value={value}
                   onChange={(e) => {
-                    const { value } = e.target;
-                    const searchObj = new URLSearchParams(searchParams);
-                    searchObj.set(key, value);
-                    onChange?.(searchObj.toString());
+                    // const { value } = e.target;
+                    // const searchObj = new URLSearchParams(searchParams);
+                    // searchObj.set(key, value);
+                    // onChange?.(searchObj.toString());
+                    onChange?.(setQueryItemValue(query, key, e.target.value))
                   }}
                 />
               );
             })()}
             <button
               onClick={() => {
-                const searchObj = new URLSearchParams(searchParams);
-                searchObj.delete(key);
-                console.log(searchObj, searchObj.toString());
-                onChange?.(searchObj.toString());
+                onChange?.(deleteQueryItem(query, key))
               }}
             >
               Remove
@@ -106,20 +97,20 @@ export function QueryEditor({
       })}
       <button
         onClick={() => {
-          const searchObj = new URLSearchParams(searchParams);
-          const [K, V] = ["key", "value"];
-          while (true) {
-            const index = newQueryIndexRef.current;
-            let k = index > 0 ? `${K}${index}` : K;
-            let v = index > 0 ? `${V}${index}` : V;
-            if (searchObj.has(k)) {
-              newQueryIndexRef.current++;
-            } else {
-              searchObj.set(k, v);
-              break;
-            }
-          }
-          onChange?.(searchObj.toString());
+          // const searchObj = new URLSearchParams(searchParams);
+          // const [K, V] = ["key", "value"];
+          // while (true) {
+          //   const index = newQueryIndexRef.current;
+          //   let k = index > 0 ? `${K}${index}` : K;
+          //   let v = index > 0 ? `${V}${index}` : V;
+          //   if (searchObj.has(k)) {
+          //     newQueryIndexRef.current++;
+          //   } else {
+          //     searchObj.set(k, v);
+          //     break;
+          //   }
+          // }
+          // onChange?.(searchObj.toString());
         }}
       >
         Add
