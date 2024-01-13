@@ -1,38 +1,79 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { UrlEditor } from "./url-editor";
 import { canParsed } from "./url-utils";
 import { Input } from "../../components/input";
-import { LabelWrap } from "./label-wrap";
-import { Label } from "../../components/label";
+import * as q from "./query";
+import { useLatest } from "../../lib/hooks";
+
+function useQuerySizeChange(
+  query: q.Query,
+  onChange: (prev: number, curr: number) => void
+) {
+  const prevQueryRef = useRef(query);
+  const onChangeRef = useLatest(onChange);
+  useEffect(() => {
+    const [prevSize, currSize] = [prevQueryRef.current, query].map((query) =>
+      q.getSize(query)
+    );
+    if (prevSize !== currSize) {
+      onChangeRef.current(prevSize, currSize);
+    }
+    prevQueryRef.current = query;
+  }, [query]);
+}
 
 export function QueryEditor({
   query,
   onChange,
 }: {
-  query: string;
+  query: q.Query;
   onChange?: (v: string) => void;
 }) {
-  const searchParams = useMemo(() => new URLSearchParams(query), [query]);
+  const newlyAddedQueryItemKeyRef = useRef<string>(); // Based on the assumption that the newly added key is unique.
+  const newlyAddedQueryItemKeyInputRef = useRef<HTMLInputElement>(null);
   const newQueryIndexRef = useRef(0);
+  const prevScrollYRef = useRef(0);
 
-  // Automatically focus on the newly added item
-  let previousQuerySizeRef = useRef<number>(searchParams.size);
-  useEffect(() => {
-    const previousSize = previousQuerySizeRef.current;
-    const currentSize = searchParams.size;
-    if (currentSize > previousSize) {
-      const lastItem = [...searchParams.entries()].at(-1);
-      if (lastItem) {
-        const [key] = lastItem;
-        document.getElementById(key)?.focus();
+  useQuerySizeChange(query, (prevSize, currSize) => {
+    if (prevSize < currSize) {
+      const elm = newlyAddedQueryItemKeyInputRef.current;
+      if (elm) {
+        elm.focus(); // Automatically focus on the newly added item
+
+        // highlight
+        if (prevSize !== 0 && elm.parentElement) {
+          const itemElm = elm.parentElement;
+          const oldBackgroundColor = itemElm.style.backgroundColor;
+          itemElm.style.backgroundColor = "#faebd7a6";
+          setTimeout(() => {
+            itemElm.style.backgroundColor = oldBackgroundColor;
+          }, 2000);
+        }
       }
     }
-    previousQuerySizeRef.current = currentSize;
-  }, [searchParams.size]);
+  });
+
+  useQuerySizeChange(query, () => {
+    window.scroll({ top: prevScrollYRef.current }); // retain scroll position
+  });
+
+  if (!query) {
+    return (
+      <button
+        onClick={() => {
+          const [K, V] = ["key", "value"];
+          onChange?.(new URLSearchParams({ [K]: V }).toString());
+          newlyAddedQueryItemKeyRef.current = K;
+        }}
+      >
+        Add
+      </button>
+    );
+  }
 
   return (
     <div className="w-full space-y-1">
-      {[...searchParams.entries()].map(([key, value], idx) => {
+      {q.getEntries(query).map(([key, value], idx) => {
         return (
           <div
             key={idx}
@@ -47,18 +88,15 @@ export function QueryEditor({
               style={{
                 boxShadow: "none",
               }}
-              id={key}
+              ref={
+                key === newlyAddedQueryItemKeyRef.current
+                  ? newlyAddedQueryItemKeyInputRef
+                  : null
+              }
               value={key}
               onChange={(e) => {
                 const { value } = e.target;
-                onChange?.(
-                  new URLSearchParams(
-                    [...searchParams].map(([k, v]) => [
-                      k === key ? value : k,
-                      v,
-                    ])
-                  ).toString()
-                );
+                onChange?.(q.setItemKey(query, idx, value));
               }}
             ></Input>
             {(() => {
@@ -68,9 +106,7 @@ export function QueryEditor({
                     className="flex flex-col w-full"
                     url={value}
                     onChange={(v) => {
-                      const searchObj = new URLSearchParams(searchParams);
-                      searchObj.set(key, v);
-                      onChange?.(searchObj.toString());
+                      onChange?.(q.setItemValue(query, idx, v));
                     }}
                   />
                 );
@@ -83,20 +119,35 @@ export function QueryEditor({
                   }}
                   value={value}
                   onChange={(e) => {
-                    const { value } = e.target;
-                    const searchObj = new URLSearchParams(searchParams);
-                    searchObj.set(key, value);
-                    onChange?.(searchObj.toString());
+                    onChange?.(q.setItemValue(query, idx, e.target.value));
                   }}
                 />
               );
             })()}
             <button
               onClick={() => {
-                const searchObj = new URLSearchParams(searchParams);
-                searchObj.delete(key);
-                console.log(searchObj, searchObj.toString());
-                onChange?.(searchObj.toString());
+                const [K, V] = ["key", "value"];
+                while (true) {
+                  const index = newQueryIndexRef.current;
+                  let k = index > 0 ? `${K}${index}` : K;
+                  let v = index > 0 ? `${V}${index}` : V;
+                  if (q.hasItemKey(query, k)) {
+                    newQueryIndexRef.current++;
+                  } else {
+                    prevScrollYRef.current = window.scrollY;
+                    newlyAddedQueryItemKeyRef.current = k;
+                    onChange?.(q.addItemNextTo(query, idx, k, v));
+                    break;
+                  }
+                }
+              }}
+            >
+              Add
+            </button>
+            <button
+              onClick={() => {
+                prevScrollYRef.current = window.scrollY;
+                onChange?.(q.deleteItem(query, idx));
               }}
             >
               Remove
@@ -104,26 +155,6 @@ export function QueryEditor({
           </div>
         );
       })}
-      <button
-        onClick={() => {
-          const searchObj = new URLSearchParams(searchParams);
-          const [K, V] = ["key", "value"];
-          while (true) {
-            const index = newQueryIndexRef.current;
-            let k = index > 0 ? `${K}${index}` : K;
-            let v = index > 0 ? `${V}${index}` : V;
-            if (searchObj.has(k)) {
-              newQueryIndexRef.current++;
-            } else {
-              searchObj.set(k, v);
-              break;
-            }
-          }
-          onChange?.(searchObj.toString());
-        }}
-      >
-        Add
-      </button>
     </div>
   );
 }
