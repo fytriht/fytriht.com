@@ -1,9 +1,17 @@
-import { useEffect, useRef } from "react";
+import {
+  PropsWithChildren,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { Minus, Plus } from "lucide-react";
 import { UrlEditor } from "./url-editor";
 import { canParsed } from "./url-utils";
 import { Input } from "../../components/input";
 import * as q from "./query";
 import { useLatest } from "../../lib/hooks";
+import { Button } from "../../components/button";
 
 function useQuerySizeChange(
   query: q.Query,
@@ -20,6 +28,24 @@ function useQuerySizeChange(
     }
     prevQueryRef.current = query;
   }, [query]);
+}
+
+function Hover({
+  className,
+  children,
+}: {
+  children: (isHovered: boolean) => ReactNode;
+} & Omit<React.BaseHTMLAttributes<HTMLDivElement>, "children">) {
+  const [isHovered, setIsHovered] = useState(false);
+  return (
+    <div
+      className={className}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {children(isHovered)}
+    </div>
+  );
 }
 
 export function QueryEditor({
@@ -59,15 +85,18 @@ export function QueryEditor({
 
   if (!query) {
     return (
-      <button
+      <Button
+        className="flex-none"
+        variant="outline"
+        size="icon"
         onClick={() => {
           const [K, V] = ["key", "value"];
           onChange?.(new URLSearchParams({ [K]: V }).toString());
           newlyAddedQueryItemKeyRef.current = K;
         }}
       >
-        Add
-      </button>
+        <Plus className="h-3 w-3" />
+      </Button>
     );
   }
 
@@ -75,7 +104,7 @@ export function QueryEditor({
     <div className="w-full space-y-1">
       {q.getEntries(query).map(([key, value], idx) => {
         return (
-          <div
+          <Hover
             key={idx}
             className="flex py-2"
             style={{
@@ -83,25 +112,25 @@ export function QueryEditor({
               borderRadius: "calc(var(--radius) - 2px)",
             }}
           >
-            <Input
-              className="w-32 mx-1 text-right border-t-0 border-l-0 border-r-0 rounded-none"
-              style={{
-                boxShadow: "none",
-              }}
-              ref={
-                key === newlyAddedQueryItemKeyRef.current
-                  ? newlyAddedQueryItemKeyInputRef
-                  : null
-              }
-              value={key}
-              onChange={(e) => {
-                const { value } = e.target;
-                onChange?.(q.setItemKey(query, idx, value));
-              }}
-            ></Input>
-            {(() => {
-              if (canParsed(value)) {
-                return (
+            {(isHover) => (
+              <>
+                <Input
+                  className="w-32 mx-1 text-right border-t-0 border-l-0 border-r-0 rounded-none"
+                  style={{
+                    boxShadow: "none",
+                  }}
+                  ref={
+                    key === newlyAddedQueryItemKeyRef.current
+                      ? newlyAddedQueryItemKeyInputRef
+                      : null
+                  }
+                  value={key}
+                  onChange={(e) => {
+                    const { value } = e.target;
+                    onChange?.(q.setItemKey(query, idx, value));
+                  }}
+                ></Input>
+                {canParsed(value) ? (
                   <UrlEditor
                     className="flex flex-col w-full"
                     url={value}
@@ -109,50 +138,59 @@ export function QueryEditor({
                       onChange?.(q.setItemValue(query, idx, v));
                     }}
                   />
-                );
-              }
-              return (
-                <Input
-                  className="border-t-0 border-l-0 border-r-0 rounded-none"
-                  style={{
-                    boxShadow: "none",
-                  }}
-                  value={value}
-                  onChange={(e) => {
-                    onChange?.(q.setItemValue(query, idx, e.target.value));
-                  }}
-                />
-              );
-            })()}
-            <button
-              onClick={() => {
-                const [K, V] = ["key", "value"];
-                while (true) {
-                  const index = newQueryIndexRef.current;
-                  let k = index > 0 ? `${K}${index}` : K;
-                  let v = index > 0 ? `${V}${index}` : V;
-                  if (q.hasItemKey(query, k)) {
-                    newQueryIndexRef.current++;
-                  } else {
-                    prevScrollYRef.current = window.scrollY;
-                    newlyAddedQueryItemKeyRef.current = k;
-                    onChange?.(q.addItemNextTo(query, idx, k, v));
-                    break;
-                  }
-                }
-              }}
-            >
-              Add
-            </button>
-            <button
-              onClick={() => {
-                prevScrollYRef.current = window.scrollY;
-                onChange?.(q.deleteItem(query, idx));
-              }}
-            >
-              Remove
-            </button>
-          </div>
+                ) : (
+                  <Input
+                    className="border-t-0 border-l-0 border-r-0 rounded-none"
+                    style={{
+                      boxShadow: "none",
+                    }}
+                    value={value}
+                    onChange={(e) => {
+                      onChange?.(q.setItemValue(query, idx, e.target.value));
+                    }}
+                  />
+                )}
+                {isHover && (
+                  <>
+                    <Button
+                      className="flex-none"
+                      variant="outline"
+                      size="icon"
+                      onClick={() => {
+                        const [K, V] = ["key", "value"];
+                        while (true) {
+                          const index = newQueryIndexRef.current;
+                          let k = index > 0 ? `${K}${index}` : K;
+                          let v = index > 0 ? `${V}${index}` : V;
+                          if (q.hasItemKey(query, k)) {
+                            newQueryIndexRef.current++;
+                          } else {
+                            prevScrollYRef.current = window.scrollY;
+                            newlyAddedQueryItemKeyRef.current = k;
+                            onChange?.(q.addItemNextTo(query, idx, k, v));
+                            break;
+                          }
+                        }
+                      }}
+                    >
+                      <Plus className="h-3 w-3" />
+                    </Button>
+                    <Button
+                      className="flex-none"
+                      variant="outline"
+                      size="icon"
+                      onClick={() => {
+                        prevScrollYRef.current = window.scrollY;
+                        onChange?.(q.deleteItem(query, idx));
+                      }}
+                    >
+                      <Minus className="h-3 w-3" />
+                    </Button>
+                  </>
+                )}
+              </>
+            )}
+          </Hover>
         );
       })}
     </div>
