@@ -26,7 +26,7 @@ export function UrlEditor({
         <Input
           className="w-full"
           type="text"
-          placeholder="Scheme"
+          placeholder="-"
           value={scheme ?? ""}
           onChange={(e) => {
             const { value } = e.target;
@@ -40,7 +40,7 @@ export function UrlEditor({
 
       <LabelWrap label="Hostname">
         <Input
-          placeholder="Hostname"
+          placeholder="-"
           value={hostname ?? ""}
           onChange={(e) => {
             const { value } = e.target;
@@ -54,7 +54,7 @@ export function UrlEditor({
 
       <LabelWrap label="Port">
         <Input
-          placeholder="Port"
+          placeholder="-"
           value={port ?? ""}
           onChange={(e) => {
             const { value } = e.target;
@@ -68,7 +68,7 @@ export function UrlEditor({
 
       <LabelWrap label="Pathname">
         <Input
-          placeholder="Pathname"
+          placeholder="-"
           value={pathname ?? ""}
           onChange={(e) => {
             const { value } = e.target;
@@ -94,7 +94,7 @@ export function UrlEditor({
 
       <LabelWrap label="Hash">
         <Input
-          placeholder="Hash"
+          placeholder="-"
           value={hash ?? ""}
           onChange={(e) => {
             const { value } = e.target;

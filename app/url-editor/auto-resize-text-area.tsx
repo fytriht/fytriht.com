@@ -1,15 +1,25 @@
-import { useRef, useState, useCallback, useEffect } from "react";
+import {
+  useRef,
+  useState,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 import { Textarea } from "../../components/textarea";
 import { useLatest } from "../../lib/hooks";
 
-export function AutoResizeTextArea({
-  value,
-  placeholder,
-  onChange,
-  onLoaded,
-}: {
-  onLoaded: () => void;
-} & React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+export default forwardRef(function AutoResizeTextArea(
+  {
+    value,
+    placeholder,
+    onChange,
+    onLoaded,
+  }: {
+    onLoaded: () => void;
+  } & React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+  ref
+) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isLoading, setLoading] = useState(true);
 
@@ -29,6 +39,16 @@ export function AutoResizeTextArea({
   useEffect(() => {
     adjustTextareaHeight();
   }, [value, adjustTextareaHeight]);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      focus() {
+        textareaRef.current?.focus();
+      },
+    }),
+    []
+  );
 
   return (
     <Textarea
@@ -51,4 +71,4 @@ export function AutoResizeTextArea({
       className="break-all w-full border-t-0 border-l-0 border-r-0 rounded-none"
     />
   );
-}
+});
