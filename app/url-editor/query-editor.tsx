@@ -27,7 +27,7 @@ function useQuerySizeChange(
       onChangeRef.current(prevSize, currSize);
     }
     prevQueryRef.current = query;
-  }, [query]);
+  }, [query, onChangeRef]);
 }
 
 function Hover({

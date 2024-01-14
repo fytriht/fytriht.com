@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { toDataURL } from "qrcode";
+import Image from "next/image";
 import { UrlEditor } from "./url-editor";
 
 function updateLocationUrlQuery(v: string) {
@@ -38,7 +39,13 @@ export default function Page({
   return (
     <div className="flex">
       <UrlEditor className="grow" url={url} onChange={(url) => setUrl(url)} />
-      <img className="w-60 h-60" src={imgUrl} alt="" />
+      <Image
+        className="w-60 h-60"
+        src={imgUrl}
+        alt="QRCode"
+        width="240"
+        height="240"
+      />
     </div>
   );
 }
