@@ -1,8 +1,9 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { toDataURL } from "qrcode";
 import Image from "next/image";
 import { UrlEditor } from "./url-editor";
+import { AutoResizeTextArea } from "./auto-resize-text-area";
 
 function updateLocationUrlQuery(v: string) {
   const queryParams = new URLSearchParams(window.location.search);
@@ -22,6 +23,7 @@ export default function Page({
 }) {
   const [url, setUrl] = useState(() => (searchParams.url as string) ?? "");
   const [imgUrl, setImgUrl] = useState("");
+  const [textAreaLoaded, setTextAreaLoaded] = useState(false);
 
   // TODO: debounce
   // TODO: cancel
@@ -38,14 +40,31 @@ export default function Page({
 
   return (
     <div className="flex">
-      <UrlEditor className="grow" url={url} onChange={(url) => setUrl(url)} />
-      <Image
-        className="w-60 h-60"
-        src={imgUrl}
-        alt="QRCode"
-        width="240"
-        height="240"
-      />
+      <div className="grow space-y-1">
+        <AutoResizeTextArea
+          value={url}
+          onChange={(e) => {
+            setUrl(e.target.value);
+          }}
+          onLoaded={() => {
+            setTextAreaLoaded(true);
+          }}
+        />
+        {textAreaLoaded && (
+          <UrlEditor url={url} onChange={(url) => setUrl(url)} />
+        )}
+      </div>
+      {imgUrl ? (
+        <Image
+          className="w-60 h-60"
+          src={imgUrl}
+          alt="QRCode"
+          width="240"
+          height="240"
+        />
+      ) : (
+        <div className="w-60 h-60" />
+      )}
     </div>
   );
 }
