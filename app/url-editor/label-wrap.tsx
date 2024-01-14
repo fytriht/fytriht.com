@@ -10,7 +10,7 @@ export type LabelWrapProps = React.PropsWithChildren<{
 export function LabelWrap({ children, label, htmlFor, style }: LabelWrapProps) {
   return (
     <div className="flex items-center" style={style}>
-      <Label className="w-32" htmlFor={htmlFor}>{`${label}: `}</Label>
+      <Label className="w-32 flex-none" htmlFor={htmlFor}>{`${label}: `}</Label>
       {children}
     </div>
   );

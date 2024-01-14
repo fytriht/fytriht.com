@@ -104,14 +104,7 @@ export function QueryEditor({
     <div className="w-full">
       {q.getEntries(query).map(([key, value], idx) => {
         return (
-          <Hover
-            key={idx}
-            className="flex py-2"
-            style={{
-              backgroundColor: "#f1f5fa",
-              borderRadius: "calc(var(--radius) - 2px)",
-            }}
-          >
+          <Hover key={idx} className="flex py-2">
             {(isHover) => (
               <>
                 <Input
@@ -183,7 +176,11 @@ export function QueryEditor({
                   </div>
                   {canParsed(value) && (
                     <UrlEditor
-                      className="flex flex-col w-full"
+                      className="flex flex-col w-full p-2"
+                      style={{
+                        backgroundColor: "#f1f5fa",
+                        borderRadius: "calc(var(--radius) - 2px)",
+                      }}
                       url={value}
                       onChange={(v) => {
                         onChange?.(q.setItemValue(query, idx, v));
