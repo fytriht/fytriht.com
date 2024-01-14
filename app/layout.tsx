@@ -18,6 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <title>URL Editor</title>
       <body className={inter.className}>
         {children}
         <Analytics />
