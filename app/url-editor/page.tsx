@@ -2,9 +2,12 @@
 import { useEffect, useRef, useState } from "react";
 import { toDataURL } from "qrcode";
 import Image from "next/image";
+import { Copy, X } from "lucide-react";
 import { UrlEditor } from "./url-editor";
 import AutoResizeTextArea from "./auto-resize-text-area";
 import { useEffectOnce } from "../../lib/hooks";
+import { Button } from "../../components/button";
+import { useToast } from "../../components/toast/use-toast";
 
 function updateLocationUrlQuery(v: string) {
   const queryParams = new URLSearchParams(window.location.search);
@@ -25,6 +28,7 @@ export default function Page({
   const [url, setUrl] = useState(() => (searchParams.url as string) ?? "");
   const [imgUrl, setImgUrl] = useState("");
   const [textAreaLoaded, setTextAreaLoaded] = useState(false);
+  const { toast } = useToast();
 
   // TODO: debounce
   // TODO: cancel
@@ -53,17 +57,46 @@ export default function Page({
   return (
     <div className="flex">
       <div className="grow space-y-1 pr-0.5">
-        <AutoResizeTextArea
-          ref={textAreaRef}
-          value={url}
-          placeholder="Enter URL"
-          onChange={(e) => {
-            setUrl(e.target.value);
-          }}
-          onLoaded={() => {
-            setTextAreaLoaded(true);
-          }}
-        />
+        <div className="flex items-center">
+          <AutoResizeTextArea
+            ref={textAreaRef}
+            value={url}
+            placeholder="Enter URL"
+            onChange={(e) => {
+              setUrl(e.target.value);
+            }}
+            onLoaded={() => {
+              setTextAreaLoaded(true);
+            }}
+          />
+          {textAreaLoaded && (
+            <>
+              <Button
+                className="flex-none ml-1 w-9 h-9"
+                variant="outline"
+                size="icon"
+                disabled={url === ""}
+                onClick={async () => {
+                  await navigator.clipboard.writeText(url);
+                  toast({ description: "Copy successfully", duration: 2000 });
+                }}
+              >
+                <Copy className="h-4 w-4" />
+              </Button>
+              <Button
+                className="flex-none ml-1 w-9 h-9"
+                variant="outline"
+                size="icon"
+                disabled={url === ""}
+                onClick={() => {
+                  setUrl("");
+                }}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </>
+          )}
+        </div>
         {textAreaLoaded && (
           <UrlEditor url={url} onChange={(url) => setUrl(url)} />
         )}
