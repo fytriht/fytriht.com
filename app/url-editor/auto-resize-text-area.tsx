@@ -63,12 +63,11 @@ export default forwardRef(function AutoResizeTextArea(
       onChange={onChange}
       style={{
         resize: "none",
-        boxShadow: "none",
         visibility: isLoading ? "hidden" : "initial",
         overflowY: "hidden",
       }}
       rows={1}
-      className="break-all w-full border-t-0 border-l-0 border-r-0 rounded-none"
+      className="break-all"
     />
   );
 });

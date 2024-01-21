@@ -56,7 +56,7 @@ export default function Page({
 
   return (
     <div className="flex">
-      <div className="grow space-y-1 pr-0.5">
+      <div className="grow space-y-1 pr-0.5 py-2 pl-2">
         <div className="flex items-center">
           <AutoResizeTextArea
             ref={textAreaRef}

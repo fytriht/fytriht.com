@@ -8,10 +8,10 @@ import {
 import { Minus, Plus } from "lucide-react";
 import { UrlEditor } from "./url-editor";
 import { canParsed } from "./url-utils";
-import { Input } from "../../components/input";
 import * as q from "./query";
 import { useLatest } from "../../lib/hooks";
 import { Button } from "../../components/button";
+import { UnderlineInput } from "../../components/underline-input";
 
 function useQuerySizeChange(
   query: q.Query,
@@ -107,11 +107,8 @@ export function QueryEditor({
           <Hover key={idx} className="flex py-2">
             {(isHover) => (
               <>
-                <Input
-                  className="w-32 mx-1 text-right border-t-0 border-l-0 border-r-0 rounded-none"
-                  style={{
-                    boxShadow: "none",
-                  }}
+                <UnderlineInput
+                  className="w-32 mx-1 text-right"
                   ref={
                     key === newlyAddedQueryItemKeyRef.current
                       ? newlyAddedQueryItemKeyInputRef
@@ -122,14 +119,10 @@ export function QueryEditor({
                     const { value } = e.target;
                     onChange?.(q.setItemKey(query, idx, value));
                   }}
-                ></Input>
+                />
                 <div className="grow space-y-1">
                   <div className="flex space-y-1">
-                    <Input
-                      className="border-t-0 border-l-0 border-r-0 rounded-none"
-                      style={{
-                        boxShadow: "none",
-                      }}
+                    <UnderlineInput
                       value={value}
                       onChange={(e) => {
                         onChange?.(q.setItemValue(query, idx, e.target.value));
