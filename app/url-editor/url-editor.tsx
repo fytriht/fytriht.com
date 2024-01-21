@@ -56,11 +56,13 @@ export function UrlEditor({
           placeholder="-"
           value={port ?? ""}
           onChange={(e) => {
-            const { value } = e.target;
-            // if (value) {
-            const newUrl = toUrlString({ ...customUrl, port: value });
+            let { value } = e.target;
+            value = value.replace(/[^0-9]/g, ""); // Numbers only
+            const newUrl = toUrlString({
+              ...customUrl,
+              port: value,
+            });
             onChange?.(newUrl);
-            // }
           }}
         />
       </LabelWrap>
