@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Input } from "../../components/input";
 
 export type RequiredInputProps = {
@@ -7,14 +7,20 @@ export type RequiredInputProps = {
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value">;
 
 export function RequiredInput({
-  value: initialValue,
+  value: outerValue,
   onChange,
   placeholder,
   ...otherProps
 }: RequiredInputProps) {
   const [isFocus, setFocus] = useState(false);
-  const [value, setValue] = useState(initialValue);
-  const originValueRef = useRef<string>(initialValue);
+  const [value, setValue] = useState(outerValue);
+  const originValueRef = useRef<string>(outerValue);
+
+  useEffect(() => {
+    if (outerValue === "") {
+      setValue(outerValue);
+    }
+  }, [outerValue]);
 
   return (
     <Input
