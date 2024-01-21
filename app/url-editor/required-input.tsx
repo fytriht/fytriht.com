@@ -7,20 +7,13 @@ export type RequiredInputProps = {
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value">;
 
 export function RequiredInput({
-  value: outerValue,
+  value,
   onChange,
   placeholder,
   ...otherProps
 }: RequiredInputProps) {
   const [isFocus, setFocus] = useState(false);
-  const [value, setValue] = useState(outerValue);
-  const originValueRef = useRef<string>(outerValue);
-
-  useEffect(() => {
-    if (outerValue === "") {
-      setValue(outerValue);
-    }
-  }, [outerValue]);
+  const [valueEmptied, setValueEmptied] = useState(false);
 
   return (
     <Input
@@ -29,23 +22,18 @@ export function RequiredInput({
       }}
       onBlur={() => {
         setFocus(false);
-        if (value === "") {
-          const originValue = originValueRef.current;
-          setValue(originValue);
-          onChange(originValue);
+        if (valueEmptied) {
+          setValueEmptied(false);
         }
       }}
       onChange={(e) => {
-        const newValue = e.target.value;
-        setValue(newValue);
-        if (newValue === "") {
-          originValueRef.current = value;
-        }
-        if (newValue !== "") {
-          onChange(newValue);
+        const value = e.target.value;
+        setValueEmptied(value === "");
+        if (value !== "") {
+          onChange(value);
         }
       }}
-      value={value}
+      value={valueEmptied ? "" : value}
       placeholder={isFocus ? undefined : placeholder}
       {...otherProps}
     />
