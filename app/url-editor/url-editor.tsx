@@ -4,6 +4,7 @@ import { QueryEditor } from "./query-editor";
 import { cn } from "../../lib/utils";
 import { LabelWrap } from "./label-wrap";
 import { Input } from "../../components/input";
+import { RequiredInput } from "./required-input";
 
 export function UrlEditor({
   url,
@@ -23,13 +24,12 @@ export function UrlEditor({
   return (
     <div className={cn(className, "space-y-1")} style={style}>
       <LabelWrap label="Scheme">
-        <Input
+        <RequiredInput
           className="w-full"
           type="text"
           placeholder="-"
           value={scheme ?? ""}
-          onChange={(e) => {
-            const { value } = e.target;
+          onChange={(value) => {
             if (value) {
               const newUrl = toUrlString({ ...customUrl, scheme: value });
               onChange?.(newUrl);
@@ -39,11 +39,10 @@ export function UrlEditor({
       </LabelWrap>
 
       <LabelWrap label="Hostname">
-        <Input
+        <RequiredInput
           placeholder="-"
           value={hostname ?? ""}
-          onChange={(e) => {
-            const { value } = e.target;
+          onChange={(value) => {
             if (value) {
               const newUrl = toUrlString({ ...customUrl, hostname: value });
               onChange?.(newUrl);
